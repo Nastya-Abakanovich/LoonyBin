@@ -32,5 +32,17 @@ namespace LoonyBin.Controllers
                 patient => Ok(patient.Adapt<PatientResponse>()),
                 _ => Conflict());
         }
+
+        [HttpPut("/patients", Name = "Update")]
+        [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAsync([FromBody] PatientRequest request)
+        {
+            var result = await patientService.UpdateAsync(request.Adapt<Patient>());
+
+            return result.Match<IActionResult>(
+                patient => Ok(patient.Adapt<PatientResponse>()),
+                _ => NotFound());
+        }
     }
 }

@@ -9,5 +9,7 @@ namespace LoonyBin.Services
         public Task<OneOf<Patient, NotFound>> GetByIdAsync(Guid Id);
 
         public Task<OneOf<Patient, Error>> CreateAsync(Patient patient);
+
+        public Task<OneOf<Patient, NotFound>> UpdateAsync(Patient patient);
     }
 }

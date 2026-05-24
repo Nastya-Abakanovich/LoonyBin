@@ -31,5 +31,16 @@ namespace LoonyBin.Services
 
             return patient;
         }
+
+        public async Task<OneOf<Patient, NotFound>> UpdateAsync(Patient patient)
+        {
+            if (!dbContext.Patients.Any(p => p.Id == patient.Id))
+                return new NotFound();
+
+            dbContext.Patients.Update(patient);
+            await dbContext.SaveChangesAsync();
+
+            return patient;
+        }
     }
 }
