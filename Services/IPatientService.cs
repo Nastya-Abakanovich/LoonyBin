@@ -6,6 +6,8 @@ namespace LoonyBin.Services
 {
     public interface IPatientService
     {
-        public OneOf<Patient, NotFound> GetById(Guid Id);
+        public Task<OneOf<Patient, NotFound>> GetByIdAsync(Guid Id);
+
+        public Task<OneOf<Patient, Error>> CreateAsync(Patient patient);
     }
 }
