@@ -12,9 +12,9 @@ namespace LoonyBin.Controllers
         [HttpGet("/patients/{Id:Guid}", Name = "GetById")]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult>  GetByIdAsync([FromRoute] Guid Id)
+        public async Task<IActionResult>  GetByIdAsync([FromRoute] Guid id)
         {
-            var result = await patientService.GetByIdAsync(Id);
+            var result = await patientService.GetByIdAsync(id);
 
             return result.Match<IActionResult>(
                 patient => Ok(patient.Adapt<PatientResponse>()),
@@ -42,6 +42,18 @@ namespace LoonyBin.Controllers
 
             return result.Match<IActionResult>(
                 patient => Ok(patient.Adapt<PatientResponse>()),
+                _ => NotFound());
+        }
+
+        [HttpDelete("/patients/{Id:Guid}", Name = "Delete")]
+        [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            var result = await patientService.DeleteAsync(id);
+
+            return result.Match<IActionResult>(
+                _ => Ok(),
                 _ => NotFound());
         }
     }

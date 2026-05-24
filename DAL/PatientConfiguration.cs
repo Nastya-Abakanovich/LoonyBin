@@ -36,7 +36,9 @@ namespace LoonyBin.DAL
                 .Property(p => p.Gender)
                 .HasConversion<string>()
                 .HasMaxLength(10)
-                .IsRequired(); ;
+                .IsRequired();
+
+            builder.HasQueryFilter(p => !p.IsDeleted);
         }
     }
 }

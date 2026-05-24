@@ -7,9 +7,9 @@ namespace LoonyBin.Services
 {
     public class PatientService(PatientDbContext dbContext): IPatientService
     {
-        public async Task<OneOf<Patient, NotFound>> GetByIdAsync(Guid Id)
+        public async Task<OneOf<Patient, NotFound>> GetByIdAsync(Guid id)
         {
-            var patient = await dbContext.Patients.SingleOrDefaultAsync(p => p.Id == Id);
+            var patient = await dbContext.Patients.SingleOrDefaultAsync(p => p.Id == id);
 
             return patient != null ? patient : new NotFound();
         }
@@ -41,6 +41,18 @@ namespace LoonyBin.Services
             await dbContext.SaveChangesAsync();
 
             return patient;
+        }
+
+        public async Task<OneOf<Success, NotFound>> DeleteAsync(Guid id)
+        {
+            var patient = await dbContext.Patients.SingleOrDefaultAsync(p => p.Id == id);
+            if (patient == null)
+                return new NotFound();
+
+            dbContext.Patients.Remove(patient);
+            await dbContext.SaveChangesAsync();
+
+            return new Success();
         }
     }
 }

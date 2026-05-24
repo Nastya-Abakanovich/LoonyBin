@@ -11,9 +11,11 @@ TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<EntitySaveChangesInterceptor>();
 
-builder.Services.AddDbContext<PatientDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<PatientDbContext>((serviceProvider, options) => options
+    .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .AddInterceptors(serviceProvider.GetRequiredService<EntitySaveChangesInterceptor>()));
 builder.Services.AddScoped<IPatientService, PatientService>();
 
 var app = builder.Build();

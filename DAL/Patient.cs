@@ -1,6 +1,6 @@
 ﻿namespace LoonyBin.DAL
 {
-    public class Patient
+    public class Patient: BaseDeletableEntity
     {
         public Guid Id { get; set; }
 
