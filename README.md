@@ -2,6 +2,7 @@
 
 There is an entity Patient defined by the following JSON:
 
+```json
 {
     "name":
     {
@@ -12,6 +13,7 @@ There is an entity Patient defined by the following JSON:
     "gender": "male",
     "birthDate": "2024-01-13T18:25:43",
 }
+```
 
 The mandatory fields are name.family and birthDate.
 
