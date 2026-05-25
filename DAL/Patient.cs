@@ -6,7 +6,7 @@
 
         public string FamilyName { get; set; } = default!;
 
-        public List<string>? GivenNames { get; set; }
+        public List<string> GivenNames { get; set; } = default!;
 
         public Gender Gender { get; set; }
 

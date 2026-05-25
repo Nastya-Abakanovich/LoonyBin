@@ -30,6 +30,6 @@ namespace LoonyBin.Dtos
 
         public string Family { get; set; } = default!;
 
-        public List<string>? Given { get; set; }
+        public List<string> Given { get; set; } = default!;
     }
 }

@@ -18,7 +18,7 @@ namespace LoonyBin.Dtos
             config.NewConfig<PatientCreateRequest, Patient>()
                 .Map(dest => dest.Id, src => src.Name.Id)
                 .Map(dest => dest.FamilyName, src => src.Name.Family)
-                .Map(dest => dest.GivenNames, src => src.Name.Given)
+                .Map(dest => dest.GivenNames, src => src.Name.Given ?? new ())
                 .Map(dest => dest.Gender, src => src.Gender.ToGender());
         }
     }
@@ -62,6 +62,10 @@ namespace LoonyBin.Dtos
 
             RuleFor(x => x.Family)
                 .NotEmpty().WithMessage("Family name is required.");
+
+            RuleFor(x => x.Given)
+                .Must(list => list == null || list.All(s => !string.IsNullOrWhiteSpace(s)))
+                .WithMessage("Each given name must be non-empty.");
         }
     }
 }

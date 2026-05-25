@@ -15,6 +15,7 @@ namespace LoonyBin.DAL
 
             builder
                 .Property(p => p.GivenNames)
+                .IsRequired()
                 .HasConversion(
                     v => string.Join(";", v),
                     v => v.Split(";", StringSplitOptions.RemoveEmptyEntries).ToList()
