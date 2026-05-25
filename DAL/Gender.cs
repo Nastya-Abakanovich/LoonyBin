@@ -1,4 +1,4 @@
-﻿namespace LoonyBin
+﻿namespace LoonyBin.DAL
 {
     public enum Gender
     {

@@ -1,4 +1,7 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using LoonyBin.DAL;
+using LoonyBin.Dtos;
 using LoonyBin.Services;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +20,9 @@ builder.Services.AddDbContext<PatientDbContext>((serviceProvider, options) => op
     .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
     .AddInterceptors(serviceProvider.GetRequiredService<EntitySaveChangesInterceptor>()));
 builder.Services.AddScoped<IPatientService, PatientService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<PatientCreateRequestValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 

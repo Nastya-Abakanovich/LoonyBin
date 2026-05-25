@@ -12,7 +12,7 @@ namespace LoonyBin.Services
         public Task<OneOf<Patient, Error>> CreateAsync(Patient patient,
             CancellationToken ct = default);
 
-        public Task<OneOf<Patient, NotFound>> UpdateAsync(Patient patient,
+        public Task<OneOf<Patient, NotFound>> UpdateAsync(Guid id, Patient patient,
             CancellationToken ct = default);
 
         public Task<OneOf<Success, NotFound>> DeleteAsync(Guid id,

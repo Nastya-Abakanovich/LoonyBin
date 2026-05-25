@@ -1,10 +1,11 @@
-﻿using Mapster;
+﻿using LoonyBin.DAL;
+using Mapster;
 
-namespace LoonyBin.DAL
+namespace LoonyBin.Dtos
 {
     public class PatientResponse: IRegister
     {
-        public Name Name { get; set; } = default!;
+        public NameDto Name { get; set; } = default!;
 
         public string Gender { get; set; } = default!;
 
@@ -13,7 +14,7 @@ namespace LoonyBin.DAL
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Patient, PatientResponse>()
-                .Map(dest => dest.Name, src => new Name
+                .Map(dest => dest.Name, src => new NameDto
                 {
                     Id = src.Id,
                     Family = src.FamilyName,
@@ -21,5 +22,14 @@ namespace LoonyBin.DAL
                 })
                 .Map(dest => dest.Gender, src => src.Gender.ToString().ToLower());
         }
+    }
+
+    public class NameDto
+    {
+        public Guid Id { get; set; }
+
+        public string Family { get; set; } = default!;
+
+        public List<string>? Given { get; set; }
     }
 }
