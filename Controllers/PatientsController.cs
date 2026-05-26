@@ -7,10 +7,10 @@ using LoonyBin.Dtos;
 namespace LoonyBin.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("patients")]
     public class PatientsController(IPatientService patientService) : ControllerBase
     {
-        [HttpGet("/patients/{Id:Guid}", Name = "GetById")]
+        [HttpGet("{id:Guid}")]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult>  GetByIdAsync([FromRoute] Guid id, 
@@ -23,7 +23,7 @@ namespace LoonyBin.Controllers
                 _ => NotFound());
         }
 
-        [HttpPost("/patients", Name = "Create")]
+        [HttpPost()]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> CreateAsync([FromBody] PatientCreateRequest request,
@@ -36,7 +36,7 @@ namespace LoonyBin.Controllers
                 _ => Conflict());
         }
 
-        [HttpPut("/patients/{Id:Guid}", Name = "Update")]
+        [HttpPut("{id:Guid}")]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, 
@@ -50,7 +50,7 @@ namespace LoonyBin.Controllers
                 _ => NotFound());
         }
 
-        [HttpDelete("/patients/{Id:Guid}", Name = "Delete")]
+        [HttpDelete("{id:Guid}")]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid id,
