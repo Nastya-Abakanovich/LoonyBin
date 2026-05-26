@@ -17,5 +17,8 @@ namespace LoonyBin.Services
 
         public Task<OneOf<Success, NotFound>> DeleteAsync(Guid id,
             CancellationToken ct = default);
+
+        public Task<List<Patient>> SearchByBirthDateAsync(List<DateFilter> filters, 
+            CancellationToken ct = default);
     }
 }

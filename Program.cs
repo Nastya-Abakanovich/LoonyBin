@@ -24,6 +24,7 @@ builder.Services.AddScoped<IPatientService, PatientService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<PatientCreateRequestValidator>();
 builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddScoped<IValidator<List<string>>, DateQueryValidator>();
 
 var app = builder.Build();
 

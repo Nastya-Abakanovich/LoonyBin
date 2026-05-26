@@ -1,14 +1,16 @@
+using FluentValidation;
 using LoonyBin.DAL;
-using LoonyBin.Services;
-using Microsoft.AspNetCore.Mvc;
-using Mapster;
 using LoonyBin.Dtos;
+using LoonyBin.Services;
+using Mapster;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LoonyBin.Controllers
 {
     [ApiController]
     [Route("patients")]
-    public class PatientsController(IPatientService patientService) : ControllerBase
+    public class PatientsController(IPatientService patientService, 
+        IValidator<List<string>> dateQueryValidator) : ControllerBase
     {
         [HttpGet("{id:Guid}")]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
@@ -61,6 +63,24 @@ namespace LoonyBin.Controllers
             return result.Match<IActionResult>(
                 _ => Ok(),
                 _ => NotFound());
+        }
+
+        [HttpGet()]
+        [ProducesResponseType(typeof(List<PatientResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SearchByBirthDateAsync([FromQuery(Name = "date")] List<string>? dateParams, 
+            CancellationToken ct = default)
+        {
+            var validation = await dateQueryValidator.ValidateAsync(dateParams, ct);
+
+            if (!validation.IsValid)
+                return BadRequest(validation.Errors);
+
+            var filters = dateParams?.Select(x => DateFilter.Parse(x)).ToList() ?? new();
+
+            var result = await patientService.SearchByBirthDateAsync(filters, ct);
+
+            return Ok(result.Adapt<List<PatientResponse>>());
         }
     }
 }
