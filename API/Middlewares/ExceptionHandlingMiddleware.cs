@@ -1,4 +1,4 @@
-﻿namespace LoonyBin
+﻿namespace LoonyBin.API.Middlewares
 {
     public class ExceptionHandlingMiddleware(RequestDelegate next, 
         ILogger<ExceptionHandlingMiddleware> logger)

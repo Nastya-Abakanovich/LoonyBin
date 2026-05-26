@@ -1,7 +1,7 @@
 ﻿using LoonyBin.DAL;
 using Microsoft.EntityFrameworkCore;
 
-namespace LoonyBin
+namespace LoonyBin.Infrastructure
 {
     public class MigrationHostedService(IServiceProvider provider) : IHostedService
     {

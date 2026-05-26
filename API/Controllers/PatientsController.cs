@@ -1,12 +1,11 @@
 using FluentValidation;
-using LoonyBin.DAL;
-using LoonyBin.DateFilters;
-using LoonyBin.Dtos;
-using LoonyBin.Services;
+using LoonyBin.Features.DateFilters;
+using LoonyBin.Features.Patients;
+using LoonyBin.Infrastructure.Entities;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LoonyBin.Controllers
+namespace LoonyBin.API.Controllers
 {
     [ApiController]
     [Route("patients")]

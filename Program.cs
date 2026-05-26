@@ -1,9 +1,9 @@
 using FluentValidation;
-using LoonyBin;
+using LoonyBin.API.Middlewares;
 using LoonyBin.DAL;
-using LoonyBin.DateFilters;
-using LoonyBin.Dtos;
-using LoonyBin.Services;
+using LoonyBin.Features.DateFilters;
+using LoonyBin.Features.Patients;
+using LoonyBin.Infrastructure;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;

@@ -1,4 +1,4 @@
-﻿namespace LoonyBin.DAL
+﻿namespace LoonyBin.Infrastructure.Entities
 {
     public class Patient: BaseDeletableEntity
     {

@@ -1,4 +1,4 @@
-﻿namespace LoonyBin.DateFilters
+﻿namespace LoonyBin.Features.DateFilters
 {
     public class DateFilter()
     {

@@ -1,10 +1,11 @@
 ﻿using LoonyBin.DAL;
-using LoonyBin.DateFilters;
+using LoonyBin.Features.DateFilters;
+using LoonyBin.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
 
-namespace LoonyBin.Services
+namespace LoonyBin.Features.Patients
 {
     public class PatientService(PatientDbContext dbContext, 
         ILogger<PatientService> logger) : IPatientService

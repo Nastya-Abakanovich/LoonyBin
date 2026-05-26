@@ -1,9 +1,9 @@
-﻿using LoonyBin.DAL;
-using LoonyBin.DateFilters;
+﻿using LoonyBin.Features.DateFilters;
+using LoonyBin.Infrastructure.Entities;
 using OneOf;
 using OneOf.Types;
 
-namespace LoonyBin.Services
+namespace LoonyBin.Features.Patients
 {
     public interface IPatientService
     {

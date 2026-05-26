@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
-using LoonyBin.DAL;
+using LoonyBin.Infrastructure.Entities;
+using LoonyBin.Infrastructure.Extensions;
 using Mapster;
 
-namespace LoonyBin.Dtos
+namespace LoonyBin.Features.Patients
 {
     public class PatientRequest : IRegister
     {

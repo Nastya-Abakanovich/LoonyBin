@@ -1,6 +1,6 @@
-﻿using LoonyBin.DAL;
+﻿using LoonyBin.Infrastructure.Entities;
 
-namespace LoonyBin
+namespace LoonyBin.Infrastructure.Extensions
 {
     public static class GenderExtensions
     {
