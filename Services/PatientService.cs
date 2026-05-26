@@ -6,13 +6,21 @@ using OneOf.Types;
 
 namespace LoonyBin.Services
 {
-    public class PatientService(PatientDbContext dbContext): IPatientService
+    public class PatientService(PatientDbContext dbContext, 
+        ILogger<PatientService> logger) : IPatientService
     {
         public async Task<OneOf<Patient, NotFound>> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             var patient = await dbContext.Patients.SingleOrDefaultAsync(p => p.Id == id, ct);
 
-            return patient != null ? patient : new NotFound();
+            if (patient == null)
+            {
+                logger.LogWarning("Patient {PatientId} not found", id);
+                return new NotFound();
+            }
+
+            logger.LogInformation("Patient {PatientId} retrieved", id);
+            return patient;
         }
 
         public async Task<Patient> CreateAsync(Patient patient,
@@ -23,6 +31,8 @@ namespace LoonyBin.Services
             await dbContext.Patients.AddAsync(patient, ct);
             await dbContext.SaveChangesAsync(ct);
 
+            logger.LogInformation("Patient {PatientId} successfully created", patient.Id);
+
             return patient;
         }
 
@@ -30,10 +40,15 @@ namespace LoonyBin.Services
             CancellationToken ct = default)
         {
             if (!dbContext.Patients.Any(p => p.Id == id))
+            {
+                logger.LogWarning("Attempt to update non-existing patient {PatientId}", id);
                 return new NotFound();
+            }
 
             dbContext.Patients.Update(patient);
             await dbContext.SaveChangesAsync(ct);
+
+            logger.LogInformation("Patient {PatientId} successfully updated", id);
 
             return patient;
         }
@@ -43,10 +58,15 @@ namespace LoonyBin.Services
         {
             var patient = await dbContext.Patients.SingleOrDefaultAsync(p => p.Id == id, ct);
             if (patient == null)
+            {
+                logger.LogWarning("Attempt to delete non-existing patient {PatientId}", id);
                 return new NotFound();
+            }
 
             dbContext.Patients.Remove(patient);
             await dbContext.SaveChangesAsync(ct);
+
+            logger.LogInformation("Patient {PatientId} successfully deleted", id);
 
             return new Success();
         }
@@ -54,6 +74,9 @@ namespace LoonyBin.Services
         public async Task<List<Patient>> SearchByBirthDateAsync(List<DateFilter> filters,
             CancellationToken ct = default)
         {
+            logger.LogInformation("Searching patients by birth date with filters: {Filters}",
+                string.Join(", ", filters.Select(f => $"{f.Prefix}{f.Range}")));
+
             var query = dbContext.Patients.AsQueryable();
 
             foreach (var f in filters)
