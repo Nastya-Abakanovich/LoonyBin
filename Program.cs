@@ -15,6 +15,7 @@ TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddHostedService<MigrationHostedService>();
 builder.Services.AddScoped<EntitySaveChangesInterceptor>();
 
 builder.Services.AddDbContext<PatientDbContext>((serviceProvider, options) => options

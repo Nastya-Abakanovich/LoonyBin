@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: patient_api
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION_STRING}
+    ports:
+      - "8080:8080"
+    networks:
+      - patient_net
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: patient_db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - patient_data:/var/opt/mssql
+    networks:
+      - patient_net
+
+networks:
+  patient_net:
+
+volumes:
+  patient_data:
