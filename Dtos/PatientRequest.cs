@@ -4,9 +4,9 @@ using Mapster;
 
 namespace LoonyBin.Dtos
 {
-    public class PatientCreateRequest : IRegister
+    public class PatientRequest : IRegister
     {
-        public NameCreateDto Name { get; set; } = default!;
+        public NameRequestDto Name { get; set; } = default!;
 
         public string? Gender { get; set; }
 
@@ -15,30 +15,27 @@ namespace LoonyBin.Dtos
 
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<PatientCreateRequest, Patient>()
-                .Map(dest => dest.Id, src => src.Name.Id)
+            config.NewConfig<PatientRequest, Patient>()
                 .Map(dest => dest.FamilyName, src => src.Name.Family)
-                .Map(dest => dest.GivenNames, src => src.Name.Given ?? new ())
+                .Map(dest => dest.GivenNames, src => src.Name.Given ?? new())
                 .Map(dest => dest.Gender, src => src.Gender.ToGender());
         }
     }
 
-    public class NameCreateDto
+    public class NameRequestDto
     {
-        public Guid? Id { get; set; }
-
         public string Family { get; set; } = default!;
 
         public List<string>? Given { get; set; }
     }
 
-    public class PatientCreateRequestValidator : AbstractValidator<PatientCreateRequest>
+    public class PatientRequestValidator : AbstractValidator<PatientRequest>
     {
-        public PatientCreateRequestValidator()
+        public PatientRequestValidator()
         {
             RuleFor(x => x.Name)
             .NotNull().WithMessage("Name is required.")
-            .SetValidator(new NameCreateDtoValidator());
+            .SetValidator(new NameRequestDtoValidator());
 
             RuleFor(x => x.Gender)
                 .IsEnumName(typeof(Gender), caseSensitive: false)
@@ -51,15 +48,10 @@ namespace LoonyBin.Dtos
         }
     }
 
-    public class NameCreateDtoValidator : AbstractValidator<NameCreateDto>
+    public class NameRequestDtoValidator : AbstractValidator<NameRequestDto>
     {
-        public NameCreateDtoValidator()
+        public NameRequestDtoValidator()
         {
-            RuleFor(x => x.Id)
-                .NotEqual(Guid.Empty)
-                .When(x => x.Id.HasValue)
-                .WithMessage("Id must not be a valid Guid or empty.");
-
             RuleFor(x => x.Family)
                 .NotEmpty().WithMessage("Family name is required.");
 

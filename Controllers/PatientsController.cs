@@ -1,5 +1,6 @@
 using FluentValidation;
 using LoonyBin.DAL;
+using LoonyBin.DateFilters;
 using LoonyBin.Dtos;
 using LoonyBin.Services;
 using Mapster;
@@ -10,7 +11,8 @@ namespace LoonyBin.Controllers
     [ApiController]
     [Route("patients")]
     public class PatientsController(IPatientService patientService, 
-        IValidator<List<string>> dateQueryValidator) : ControllerBase
+        IValidator<List<string>> dateQueryValidator,
+        IValidator<PatientRequest> patientValidator): ControllerBase
     {
         [HttpGet("{id:Guid}")]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
@@ -27,24 +29,31 @@ namespace LoonyBin.Controllers
 
         [HttpPost()]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> CreateAsync([FromBody] PatientCreateRequest request,
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateAsync([FromBody] PatientRequest request,
             CancellationToken ct = default)
         {
-            var result = await patientService.CreateAsync(request.Adapt<Patient>(), ct);
+            var validation = await patientValidator.ValidateAsync(request, ct);
+            if (!validation.IsValid)
+                return BadRequest(validation.Errors);
 
-            return result.Match<IActionResult>(
-                patient => Ok(patient.Adapt<PatientResponse>()),
-                _ => Conflict());
+            var patient = await patientService.CreateAsync(request.Adapt<Patient>(), ct);
+
+            return Ok(patient.Adapt<PatientResponse>());
         }
 
         [HttpPut("{id:Guid}")]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, 
-            [FromBody] PatientUpdateRequest request,
+            [FromBody] PatientRequest request,
             CancellationToken ct = default)
         {
+            var validation = await patientValidator.ValidateAsync(request, ct);
+            if (!validation.IsValid)
+                return BadRequest(validation.Errors);
+
             var result = await patientService.UpdateAsync(id, request.Adapt<Patient>(), ct);
 
             return result.Match<IActionResult>(
@@ -71,8 +80,7 @@ namespace LoonyBin.Controllers
         public async Task<IActionResult> SearchByBirthDateAsync([FromQuery(Name = "date")] List<string>? dateParams, 
             CancellationToken ct = default)
         {
-            var validation = await dateQueryValidator.ValidateAsync(dateParams, ct);
-
+            var validation = await dateQueryValidator.ValidateAsync(dateParams!, ct);
             if (!validation.IsValid)
                 return BadRequest(validation.Errors);
 

@@ -1,4 +1,5 @@
 ﻿using LoonyBin.DAL;
+using LoonyBin.DateFilters;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
@@ -14,19 +15,11 @@ namespace LoonyBin.Services
             return patient != null ? patient : new NotFound();
         }
 
-        public async Task<OneOf<Patient, Error>> CreateAsync(Patient patient,
+        public async Task<Patient> CreateAsync(Patient patient,
             CancellationToken ct = default)
         {
-            if (patient.Id != default)
-            {
-                if (dbContext.Patients.Any(p => p.Id == patient.Id))
-                    return new Error();
-            }
-            else
-            {
-                patient.Id = Guid.NewGuid();
-            }
-            
+            patient.Id = Guid.NewGuid();
+
             await dbContext.Patients.AddAsync(patient, ct);
             await dbContext.SaveChangesAsync(ct);
 

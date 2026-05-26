@@ -1,7 +1,7 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using LoonyBin;
 using LoonyBin.DAL;
+using LoonyBin.DateFilters;
 using LoonyBin.Dtos;
 using LoonyBin.Services;
 using Mapster;
@@ -22,9 +22,8 @@ builder.Services.AddDbContext<PatientDbContext>((serviceProvider, options) => op
     .AddInterceptors(serviceProvider.GetRequiredService<EntitySaveChangesInterceptor>()));
 builder.Services.AddScoped<IPatientService, PatientService>();
 
-builder.Services.AddValidatorsFromAssemblyContaining<PatientCreateRequestValidator>();
-builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IValidator<List<string>>, DateQueryValidator>();
+builder.Services.AddScoped<IValidator<PatientRequest>, PatientRequestValidator>();
 
 var app = builder.Build();
 
