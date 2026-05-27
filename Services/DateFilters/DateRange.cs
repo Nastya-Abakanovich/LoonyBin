@@ -1,30 +1,37 @@
-﻿namespace LoonyBin.Features.DateFilters
+﻿using System.Globalization;
+
+namespace LoonyBin.Features.DateFilters
 {
     public record DateRange(DateTimeOffset Start, DateTimeOffset End)
     {
+        private static readonly string[] YearFormats = { "yyyy" };
+        private static readonly string[] YearMonthFormats = { "yyyy-MM" };
+        private static readonly string[] DateFormats = { "yyyy-MM-dd" };
+        private static readonly string[] DateTimeFormats =
+        {
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss.FFF'Z'",
+            "yyyy-MM-dd'T'HH:mm:ssK",
+            "yyyy-MM-dd'T'HH:mm:ss.FFFK"
+        };
+
         public static DateRange Parse(string input)
         {
-            if (input.Length == 4) // yyyy
-            {
-                var start = DateTimeOffset.Parse($"{input}-01-01T00:00:00Z");
-                return new(start, start.AddYears(1));
-            }
+            var styles = DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
 
-            if (input.Length == 7) // yyyy-MM
-            {
-                var start = DateTimeOffset.Parse($"{input}-01T00:00:00Z");
-                return new(start, start.AddMonths(1));
-            }
+            if (DateTimeOffset.TryParseExact(input, YearFormats, CultureInfo.InvariantCulture, styles, out var year))
+                return new(year, year.AddYears(1));
 
-            if (input.Length == 10) // yyyy-MM-dd
-            {
-                var start = DateTimeOffset.Parse($"{input}T00:00:00Z");
-                return new(start, start.AddDays(1));
-            }
+            if (DateTimeOffset.TryParseExact(input, YearMonthFormats, CultureInfo.InvariantCulture, styles, out var yearMonth))
+                return new(yearMonth, yearMonth.AddMonths(1));
 
-            // full datetime
-            var dt = DateTimeOffset.Parse(input);
-            return new(dt, dt.AddSeconds(1));
+            if (DateTimeOffset.TryParseExact(input, DateFormats, CultureInfo.InvariantCulture, styles, out var date))
+                return new(date, date.AddDays(1));
+
+            if (DateTimeOffset.TryParseExact(input, DateTimeFormats, CultureInfo.InvariantCulture, styles, out var dt))
+                return new(dt, dt.AddSeconds(1));
+
+            throw new FormatException($"Invalid date format: '{input}'.");
         }
     }
 }

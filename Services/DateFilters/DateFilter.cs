@@ -1,18 +1,13 @@
 ﻿namespace LoonyBin.Features.DateFilters
 {
-    public class DateFilter()
+    public record DateFilter(FilterPrefixes Prefix, DateRange Range)
     {
-        public FilterPrefixes Prefix { get; set; }
-
-        public DateRange Range { get; set; } = default!;
-
         public static DateFilter Parse(string raw)
         {
-            return new DateFilter
-            {
-                Prefix = Enum.Parse<FilterPrefixes>(raw[..2], true),
-                Range = DateRange.Parse(raw[2..])
-            };
+            var prefix = Enum.Parse<FilterPrefixes>(raw[..2], true);
+            var range = DateRange.Parse(raw[2..]);
+
+            return new (prefix, range);
         }
     }
 }
