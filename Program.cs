@@ -1,9 +1,11 @@
 using FluentValidation;
+using LoonyBin.API.Dtos;
+using LoonyBin.API.Dtos.Validators;
 using LoonyBin.API.Middlewares;
-using LoonyBin.DAL;
 using LoonyBin.Features.DateFilters;
 using LoonyBin.Features.Patients;
 using LoonyBin.Infrastructure;
+using LoonyBin.Services.DateFilters;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -22,6 +24,7 @@ builder.Services.AddDbContext<PatientDbContext>((serviceProvider, options) => op
     .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
     .AddInterceptors(serviceProvider.GetRequiredService<EntitySaveChangesInterceptor>()));
 builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IDateSearchService, DateSearchService>();
 
 builder.Services.AddScoped<IValidator<List<string>>, DateQueryValidator>();
 builder.Services.AddScoped<IValidator<PatientRequest>, PatientRequestValidator>();

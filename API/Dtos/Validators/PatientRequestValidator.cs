@@ -1,35 +1,8 @@
 ﻿using FluentValidation;
 using LoonyBin.Infrastructure.Entities;
-using LoonyBin.Infrastructure.Extensions;
-using Mapster;
 
-namespace LoonyBin.Features.Patients
+namespace LoonyBin.API.Dtos.Validators
 {
-    public class PatientRequest : IRegister
-    {
-        public NameRequestDto Name { get; set; } = default!;
-
-        public string? Gender { get; set; }
-
-        public DateTime BirthDate { get; set; }
-
-
-        public void Register(TypeAdapterConfig config)
-        {
-            config.NewConfig<PatientRequest, Patient>()
-                .Map(dest => dest.FamilyName, src => src.Name.Family)
-                .Map(dest => dest.GivenNames, src => src.Name.Given ?? new())
-                .Map(dest => dest.Gender, src => src.Gender.ToGender());
-        }
-    }
-
-    public class NameRequestDto
-    {
-        public string Family { get; set; } = default!;
-
-        public List<string>? Given { get; set; }
-    }
-
     public class PatientRequestValidator : AbstractValidator<PatientRequest>
     {
         public PatientRequestValidator()

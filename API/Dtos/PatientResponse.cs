@@ -1,7 +1,7 @@
 ﻿using LoonyBin.Infrastructure.Entities;
 using Mapster;
 
-namespace LoonyBin.Features.Patients
+namespace LoonyBin.API.Dtos
 {
     public class PatientResponse: IRegister
     {

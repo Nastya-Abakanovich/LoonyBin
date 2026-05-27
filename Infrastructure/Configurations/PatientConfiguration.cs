@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LoonyBin.DAL
+namespace LoonyBin.Infrastructure.Configurations
 {
     public class PatientConfiguration : IEntityTypeConfiguration<Patient>
     {

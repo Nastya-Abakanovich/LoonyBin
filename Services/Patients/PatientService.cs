@@ -1,14 +1,15 @@
-﻿using LoonyBin.DAL;
+﻿using LoonyBin.Infrastructure;
 using LoonyBin.Features.DateFilters;
 using LoonyBin.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
+using LoonyBin.Services.DateFilters;
 
 namespace LoonyBin.Features.Patients
 {
-    public class PatientService(PatientDbContext dbContext, 
-        ILogger<PatientService> logger) : IPatientService
+    public class PatientService(PatientDbContext dbContext,
+        IDateSearchService dateSearchService, ILogger<PatientService> logger) : IPatientService
     {
         public async Task<OneOf<Patient, NotFound>> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
@@ -82,37 +83,10 @@ namespace LoonyBin.Features.Patients
 
             foreach (var f in filters)
             {
-                query = ApplyDateFilter(query, f);
+                query = dateSearchService.ApplyDateFilter(query, f);
             }
 
             return await query.ToListAsync(ct);
-        }
-
-        private IQueryable<Patient> ApplyDateFilter(IQueryable<Patient> query,
-            DateFilter filter)
-        {
-            return filter.Prefix switch
-            {
-                FilterPrefixes.Eq => query.Where(p => p.BirthDate >= filter.Range.Start && p.BirthDate < filter.Range.End),
-                FilterPrefixes.Ne => query.Where(p => p.BirthDate < filter.Range.Start || p.BirthDate >= filter.Range.End),
-                FilterPrefixes.Lt => query.Where(p => p.BirthDate < filter.Range.Start),
-                FilterPrefixes.Le => query.Where(p => p.BirthDate <= filter.Range.End),
-                FilterPrefixes.Gt => query.Where(p => p.BirthDate > filter.Range.End),
-                FilterPrefixes.Ge => query.Where(p => p.BirthDate >= filter.Range.Start),
-                FilterPrefixes.Sa => query.Where(p => p.BirthDate > filter.Range.End),
-                FilterPrefixes.Eb => query.Where(p => p.BirthDate < filter.Range.Start),
-                FilterPrefixes.Ap => ApplyApparentlyFilter(query, filter),
-                _ => query
-            };
-        }
-
-        private IQueryable<Patient> ApplyApparentlyFilter(IQueryable<Patient> query, DateFilter filter)
-        {
-            var len = filter.Range.End - filter.Range.Start;
-            var delta = TimeSpan.FromTicks((long)(len.Ticks * 0.1));
-
-            return query.Where(p => p.BirthDate >= filter.Range.Start - delta 
-                && p.BirthDate < filter.Range.End + delta);
         }
     }
 }

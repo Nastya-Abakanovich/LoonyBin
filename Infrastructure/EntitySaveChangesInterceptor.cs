@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace LoonyBin.DAL
+namespace LoonyBin.Infrastructure
 {
     public class EntitySaveChangesInterceptor : SaveChangesInterceptor
     {

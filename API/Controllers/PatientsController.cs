@@ -1,4 +1,5 @@
 using FluentValidation;
+using LoonyBin.API.Dtos;
 using LoonyBin.Features.DateFilters;
 using LoonyBin.Features.Patients;
 using LoonyBin.Infrastructure.Entities;

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace LoonyBin.DAL
+namespace LoonyBin.Infrastructure
 {
     public class PatientDbContext : DbContext
     {

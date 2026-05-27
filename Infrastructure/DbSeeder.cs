@@ -1,5 +1,4 @@
-﻿using LoonyBin.DAL;
-using LoonyBin.Infrastructure.Entities;
+﻿using LoonyBin.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LoonyBin.Infrastructure

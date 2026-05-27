@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
+using LoonyBin.Features.DateFilters;
 
-namespace LoonyBin.Features.DateFilters
+namespace LoonyBin.API.Dtos.Validators
 {
     public class DateQueryValidator: AbstractValidator<List<string>>
     {
