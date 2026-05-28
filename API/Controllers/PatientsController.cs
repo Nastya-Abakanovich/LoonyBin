@@ -1,4 +1,3 @@
-using FluentValidation;
 using LoonyBin.API.Dtos;
 using LoonyBin.Features.DateFilters;
 using LoonyBin.Features.Patients;
@@ -10,9 +9,7 @@ namespace LoonyBin.API.Controllers
 {
     [ApiController]
     [Route("patients")]
-    public class PatientsController(IPatientService patientService, 
-        IValidator<List<string>> dateQueryValidator,
-        IValidator<PatientRequest> patientValidator): ControllerBase
+    public class PatientsController(IPatientService patientService): ControllerBase
     {
         [HttpGet("{id:Guid}")]
         [ProducesResponseType(typeof(PatientResponse), StatusCodes.Status200OK)]
@@ -33,10 +30,6 @@ namespace LoonyBin.API.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] PatientRequest request,
             CancellationToken ct = default)
         {
-            var validation = await patientValidator.ValidateAsync(request, ct);
-            if (!validation.IsValid)
-                return BadRequest(validation.Errors);
-
             var patient = await patientService.CreateAsync(request.Adapt<Patient>(), ct);
 
             return Ok(patient.Adapt<PatientResponse>());
@@ -50,10 +43,6 @@ namespace LoonyBin.API.Controllers
             [FromBody] PatientRequest request,
             CancellationToken ct = default)
         {
-            var validation = await patientValidator.ValidateAsync(request, ct);
-            if (!validation.IsValid)
-                return BadRequest(validation.Errors);
-
             var result = await patientService.UpdateAsync(id, request.Adapt<Patient>(), ct);
 
             return result.Match<IActionResult>(
@@ -80,12 +69,7 @@ namespace LoonyBin.API.Controllers
         public async Task<IActionResult> SearchByBirthDateAsync([FromQuery(Name = "date")] List<string>? dateParams, 
             CancellationToken ct = default)
         {
-            var validation = await dateQueryValidator.ValidateAsync(dateParams!, ct);
-            if (!validation.IsValid)
-                return BadRequest(validation.Errors);
-
             var filters = dateParams?.Select(x => DateFilter.Parse(x)).ToList() ?? new();
-
             var result = await patientService.SearchByBirthDateAsync(filters, ct);
 
             return Ok(result.Adapt<List<PatientResponse>>());

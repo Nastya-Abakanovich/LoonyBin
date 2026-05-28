@@ -15,19 +15,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<FluentValidationFilter>();
+});
 builder.Services.AddOpenApi();
+
 builder.Services.AddHostedService<MigrationHostedService>();
 builder.Services.AddScoped<EntitySaveChangesInterceptor>();
 
 builder.Services.AddDbContext<PatientDbContext>((serviceProvider, options) => options
     .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
     .AddInterceptors(serviceProvider.GetRequiredService<EntitySaveChangesInterceptor>()));
+
+builder.Services.AddValidatorsFromAssemblyContaining<PatientRequestValidator>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDateSearchService, DateSearchService>();
-
-builder.Services.AddScoped<IValidator<List<string>>, DateQueryValidator>();
-builder.Services.AddScoped<IValidator<PatientRequest>, PatientRequestValidator>();
 
 var app = builder.Build();
 
