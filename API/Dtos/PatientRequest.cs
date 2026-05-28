@@ -1,5 +1,5 @@
-﻿using LoonyBin.Infrastructure.Entities;
-using LoonyBin.Infrastructure.Extensions;
+﻿using LoonyBin.Infrastructure.Extensions;
+using LoonyBin.Services.Patients;
 using Mapster;
 
 namespace LoonyBin.API.Dtos
@@ -15,7 +15,7 @@ namespace LoonyBin.API.Dtos
 
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<PatientRequest, Patient>()
+            config.NewConfig<PatientRequest, PatientCreateUpdateDto>()
                 .Map(dest => dest.FamilyName, src => src.Name.Family)
                 .Map(dest => dest.GivenNames, src => src.Name.Given ?? new())
                 .Map(dest => dest.Gender, src => src.Gender.ToGender());

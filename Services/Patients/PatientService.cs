@@ -1,10 +1,12 @@
-﻿using LoonyBin.Infrastructure;
-using LoonyBin.Features.DateFilters;
+﻿using LoonyBin.Features.DateFilters;
+using LoonyBin.Infrastructure;
 using LoonyBin.Infrastructure.Entities;
+using LoonyBin.Services.DateFilters;
+using LoonyBin.Services.Patients;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
-using LoonyBin.Services.DateFilters;
 
 namespace LoonyBin.Features.Patients
 {
@@ -25,9 +27,10 @@ namespace LoonyBin.Features.Patients
             return patient;
         }
 
-        public async Task<Patient> CreateAsync(Patient patient,
+        public async Task<Patient> CreateAsync(PatientCreateUpdateDto patientDto,
             CancellationToken ct = default)
         {
+            var patient = patientDto.Adapt<Patient>();
             patient.Id = Guid.NewGuid();
 
             await dbContext.Patients.AddAsync(patient, ct);
@@ -38,21 +41,22 @@ namespace LoonyBin.Features.Patients
             return patient;
         }
 
-        public async Task<OneOf<Patient, NotFound>> UpdateAsync(Guid id, Patient patient,
+        public async Task<OneOf<Patient, NotFound>> UpdateAsync(Guid id, PatientCreateUpdateDto patientDto,
             CancellationToken ct = default)
         {
-            if (!dbContext.Patients.Any(p => p.Id == id))
+            var existingPatient = await dbContext.Patients.SingleOrDefaultAsync(p => p.Id == id, ct);
+            if (existingPatient is null)
             {
                 logger.LogWarning("Attempt to update non-existing patient {PatientId}", id);
                 return new NotFound();
             }
 
-            dbContext.Patients.Update(patient);
+            patientDto.Adapt(existingPatient);
             await dbContext.SaveChangesAsync(ct);
 
             logger.LogInformation("Patient {PatientId} successfully updated", id);
 
-            return patient;
+            return existingPatient;
         }
 
         public async Task<OneOf<Success, NotFound>> DeleteAsync(Guid id,

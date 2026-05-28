@@ -1,7 +1,7 @@
 using LoonyBin.API.Dtos;
 using LoonyBin.Features.DateFilters;
 using LoonyBin.Features.Patients;
-using LoonyBin.Infrastructure.Entities;
+using LoonyBin.Services.Patients;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +30,7 @@ namespace LoonyBin.API.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] PatientRequest request,
             CancellationToken ct = default)
         {
-            var patient = await patientService.CreateAsync(request.Adapt<Patient>(), ct);
+            var patient = await patientService.CreateAsync(request.Adapt<PatientCreateUpdateDto>(), ct);
 
             return Ok(patient.Adapt<PatientResponse>());
         }
@@ -43,7 +43,7 @@ namespace LoonyBin.API.Controllers
             [FromBody] PatientRequest request,
             CancellationToken ct = default)
         {
-            var result = await patientService.UpdateAsync(id, request.Adapt<Patient>(), ct);
+            var result = await patientService.UpdateAsync(id, request.Adapt<PatientCreateUpdateDto>(), ct);
 
             return result.Match<IActionResult>(
                 patient => Ok(patient.Adapt<PatientResponse>()),
