@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using LoonyBin.Features.DateFilters;
+using LoonyBin.Services.DateFilters;
 
 namespace LoonyBin.API.Dtos.Validators
 {
@@ -21,12 +21,8 @@ namespace LoonyBin.API.Dtos.Validators
                 return false;
 
             var prefix = filter[..2];
-            var date = filter[2..];
 
-            if (!Enum.TryParse<FilterPrefixes>(prefix, true, out _))
-                return false;
-
-            return DateTimeOffset.TryParse(date, out _);
+            return Enum.TryParse<FilterPrefixes>(prefix, true, out _);
         }
     }
 }

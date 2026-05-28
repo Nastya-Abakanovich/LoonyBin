@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace LoonyBin.Features.DateFilters
+namespace LoonyBin.Services.DateFilters
 {
     public record DateRange(DateTimeOffset Start, DateTimeOffset End)
     {
@@ -31,7 +31,7 @@ namespace LoonyBin.Features.DateFilters
             if (DateTimeOffset.TryParseExact(input, DateTimeFormats, CultureInfo.InvariantCulture, styles, out var dt))
                 return new(dt, dt.AddSeconds(1));
 
-            throw new FormatException($"Invalid date format: '{input}'.");
+            throw new DateFilterFormatException($"Invalid date format: '{input}'.");
         }
     }
 }

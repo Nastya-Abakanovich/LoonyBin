@@ -1,7 +1,6 @@
 ﻿using LoonyBin.Infrastructure.Entities;
-using LoonyBin.Services.DateFilters;
 
-namespace LoonyBin.Features.DateFilters
+namespace LoonyBin.Services.DateFilters
 {
     public class DateSearchService: IDateSearchService
     {

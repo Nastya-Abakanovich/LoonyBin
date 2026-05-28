@@ -1,9 +1,7 @@
 using FluentValidation;
-using LoonyBin.API.Dtos;
 using LoonyBin.API.Dtos.Validators;
 using LoonyBin.API.Middlewares;
-using LoonyBin.Features.DateFilters;
-using LoonyBin.Features.Patients;
+using LoonyBin.Services.Patients;
 using LoonyBin.Infrastructure;
 using LoonyBin.Services.DateFilters;
 using Mapster;

@@ -1,6 +1,5 @@
 using LoonyBin.API.Dtos;
-using LoonyBin.Features.DateFilters;
-using LoonyBin.Features.Patients;
+using LoonyBin.Services.DateFilters;
 using LoonyBin.Services.Patients;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;

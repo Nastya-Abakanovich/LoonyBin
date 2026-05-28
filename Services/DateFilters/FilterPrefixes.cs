@@ -1,4 +1,4 @@
-﻿namespace LoonyBin.Features.DateFilters
+﻿namespace LoonyBin.Services.DateFilters
 {
     public enum FilterPrefixes
     {

@@ -1,14 +1,12 @@
-﻿using LoonyBin.Features.DateFilters;
-using LoonyBin.Infrastructure;
+﻿using LoonyBin.Infrastructure;
 using LoonyBin.Infrastructure.Entities;
 using LoonyBin.Services.DateFilters;
-using LoonyBin.Services.Patients;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
 
-namespace LoonyBin.Features.Patients
+namespace LoonyBin.Services.Patients
 {
     public class PatientService(PatientDbContext dbContext,
         IDateSearchService dateSearchService, ILogger<PatientService> logger) : IPatientService

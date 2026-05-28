@@ -1,5 +1,4 @@
-﻿using LoonyBin.Features.DateFilters;
-using LoonyBin.Infrastructure.Entities;
+﻿using LoonyBin.Infrastructure.Entities;
 
 namespace LoonyBin.Services.DateFilters
 {
